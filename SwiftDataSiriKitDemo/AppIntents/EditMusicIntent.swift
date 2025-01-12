@@ -27,7 +27,6 @@ struct EditMusicIntent: AppIntent {
     func perform() async throws -> some IntentResult {
         let musicModels:[MusicModel] = await MusicDataBase.shared.fetchAllMusic()
         guard !musicModels.isEmpty else {
-            print("Your album is empty.")
             throw MusicError.albumEmpty
         }
         
@@ -39,24 +38,9 @@ struct EditMusicIntent: AppIntent {
             throw $name.needsValueError("Please enter the new music name.")
         }
         
-        self.updateMusic(id: music.pid, name: name)
+        MusicDataBase.shared.updateMusic(id: music.pid, name: name)
         
         return .result()
-    }
-    
-    /// 添加新的音乐到专辑中
-    private func updateMusic(id: PersistentIdentifier, name: String) {
-        let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
-        Task.detached {
-            let addResult = await musicDataHandler().updateMusic(id: id, name: name)
-            await MainActor.run {
-                if !addResult {
-                    print("An error occured when updating music's name.")
-                } else {
-                    print("Successfully update music's name to《\(name)》.")
-                }
-            }
-        }
     }
 }
 

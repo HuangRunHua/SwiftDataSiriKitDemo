@@ -25,22 +25,7 @@ struct AddMusicIntent: AppIntent {
         guard let name = name else {
             throw $name.needsValueError()
         }
-        self.addNewMusic(name: name)
+        MusicDataBase.shared.addNewMusic(name: name)
         return .result()
-    }
-    
-    /// 添加新的音乐到专辑中
-    private func addNewMusic(name: String) {
-        let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
-        Task.detached {
-            let addResult = await musicDataHandler().addNewMusic(name: name)
-            await MainActor.run {
-                if !addResult {
-                    print("An error occured when adding new music.")
-                } else {
-                    print("Successfully add new music.")
-                }
-            }
-        }
     }
 }

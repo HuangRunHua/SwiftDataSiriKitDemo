@@ -66,7 +66,13 @@ struct EditMusicIntent: AppIntent {
     }
 }
 
-enum MusicError: Error {
+enum MusicError: Swift.Error, CustomLocalizedStringResourceConvertible {
     case albumEmpty
+
+    var localizedStringResource: LocalizedStringResource {
+        switch self {
+            case .albumEmpty: return "No music found in your album."
+        }
+    }
 }
 

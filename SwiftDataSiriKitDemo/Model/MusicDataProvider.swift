@@ -8,10 +8,10 @@
 import SwiftData
 import SwiftUI
 
-final public class MusicDataProvider: Sendable {
-    static public let shared = MusicDataProvider()
+final class MusicDataProvider: Sendable {
+    static let shared = MusicDataProvider()
 
-    public let sharedModelContainer: ModelContainer = {
+    let sharedModelContainer: ModelContainer = {
         let schema = Schema([Music.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
@@ -21,9 +21,9 @@ final public class MusicDataProvider: Sendable {
         }
     }()
 
-    public init() {}
+    init() {}
     
-    public func musicDataHandlerCreator() -> @Sendable () async -> MusicDataHandler {
+    func musicDataHandlerCreator() -> @Sendable () async -> MusicDataHandler {
         let container = sharedModelContainer
         return { MusicDataHandler(modelContainer: container) }
     }
@@ -34,7 +34,7 @@ struct MusicDataHandlerKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    public var musicDataHandler: @Sendable () async -> MusicDataHandler? {
+    var musicDataHandler: @Sendable () async -> MusicDataHandler? {
         get { self[MusicDataHandlerKey.self] }
         set { self[MusicDataHandlerKey.self] = newValue }
     }

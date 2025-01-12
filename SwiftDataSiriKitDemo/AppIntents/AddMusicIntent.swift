@@ -11,8 +11,6 @@ import SwiftData
 
 struct AddMusicIntent: AppIntent {
     
-    @Environment(\.musicDataHandler) private var musicDataHandler
-    
     static var title = LocalizedStringResource("Add Music")
     static var description = IntentDescription("Adds a new music to local album.")
     
@@ -31,17 +29,16 @@ struct AddMusicIntent: AppIntent {
         return .result()
     }
     
+    /// 添加新的音乐到专辑中
     private func addNewMusic(name: String) {
-        let musicDataHandler = musicDataHandler
+        let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
         Task.detached {
-            if let dataHandler = await musicDataHandler() {
-                let addResult = await dataHandler.addNewMusic(name: name)
-                await MainActor.run {
-                    if !addResult {
-                        print("An error occured when adding new music.")
-                    } else {
-                        print("Successfully add new music.")
-                    }
+            let addResult = await musicDataHandler().addNewMusic(name: name)
+            await MainActor.run {
+                if !addResult {
+                    print("An error occured when adding new music.")
+                } else {
+                    print("Successfully add new music.")
                 }
             }
         }

@@ -31,21 +31,15 @@ struct EditMusicIntent: AppIntent {
             throw MusicError.albumEmpty
         }
         
-        let entity: MusicModel
-        
-        if let music {
-            entity = music
-        } else {
-            let targetEntity = try await $music.requestDisambiguation(among: self.fetchAllMusic(), dialog: "Please selected your target music.")
-            entity = targetEntity
-            music = targetEntity
+        guard let music = music else {
+            throw $music.needsValueError("Please selected your target music.")
         }
         
         guard let name = name else {
             throw $name.needsValueError("Please enter the new music name.")
         }
         
-        self.updateMusic(id: entity.pid, name: name)
+        self.updateMusic(id: music.pid, name: name)
         
         return .result()
     }

@@ -25,7 +25,7 @@ struct EditMusicIntent: AppIntent {
     }
     
     func perform() async throws -> some IntentResult {
-        let musicModels:[MusicModel] = await fetchAllMusic()
+        let musicModels:[MusicModel] = await MusicDataBase.shared.fetchAllMusic()
         guard !musicModels.isEmpty else {
             print("Your album is empty.")
             throw MusicError.albumEmpty
@@ -42,12 +42,6 @@ struct EditMusicIntent: AppIntent {
         self.updateMusic(id: music.pid, name: name)
         
         return .result()
-    }
-    
-    private func fetchAllMusic() async -> [MusicModel] {
-        let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
-        let allMusics:[MusicModel] = await musicDataHandler().fetchAllMusics()
-        return allMusics
     }
     
     /// 添加新的音乐到专辑中

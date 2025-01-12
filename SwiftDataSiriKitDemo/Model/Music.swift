@@ -52,7 +52,7 @@ struct MusicQuery: EntityQuery {
         return musicModels.filter({ identifiers.contains($0.id) })
     }
     
-    /// 这个方法有两个作用
+    /// 这个方法有两个作用：
     /// - 1. 可以在指令执行的时候选择对应的音乐实体
     /// - 2. 可以在快捷指令中预先选择默认要修改的音乐
     /// 如果选择的默认音乐被删除，此时运行该指令每次都会触发重新选择音乐的过程

@@ -18,6 +18,13 @@ struct ContentView: View {
         NavigationStack {
             List(musics) { music in
                 Text(music.name)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            deleteMusic(music: music)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
             }
             .navigationTitle("Music")
             .toolbar {
@@ -39,6 +46,15 @@ struct ContentView: View {
             try modelContext.save()
         } catch {
             print("Error occured when saving modelContext: \(error)")
+        }
+    }
+    
+    func deleteMusic(music: Music) {
+        modelContext.delete(music)
+        do {
+            try modelContext.save()
+        } catch {
+            print("Error occured when deleting music: \(error)")
         }
     }
 }

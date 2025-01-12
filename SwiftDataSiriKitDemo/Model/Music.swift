@@ -22,20 +22,13 @@ class Music: Identifiable {
     }
 }
 
-struct MusicModel: Identifiable, Sendable {
+struct MusicModel: Identifiable, Sendable, AppEntity {
     var createDate: Date
     var name: String
     var id: UUID
     var pid: PersistentIdentifier
-}
-
-struct MusicModelEntity: AppEntity {
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Music"
     
-    var createDate: Date
-    var name: String
-    var id: UUID
-    var pid: PersistentIdentifier
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Music"
     
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(
@@ -48,5 +41,16 @@ struct MusicModelEntity: AppEntity {
     static var defaultQuery = MusicQuery()
 }
 
-struct MusicQuery: EntityPropertyQuery {
+struct MusicQuery: EntityQuery {
+    func entities(for identifiers: [MusicModel.ID] = []) async throws -> [MusicModel] {
+        let musicModels = await self.fetchAllMusic()
+        return musicModels
+    }
+    
+    private func fetchAllMusic() async -> [MusicModel] {
+        let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
+        let allMusics:[MusicModel] = await musicDataHandler().fetchAllMusics()
+        return allMusics
+    }
+
 }

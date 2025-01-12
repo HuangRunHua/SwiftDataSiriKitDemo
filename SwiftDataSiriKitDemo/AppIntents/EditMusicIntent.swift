@@ -17,25 +17,37 @@ struct EditMusicIntent: AppIntent {
     @Parameter(title: "Name")
     var name: String?
     
+    @Parameter(title: "Music")
+    var music: MusicModel?
+    
     static var parameterSummary: some ParameterSummary {
-        Summary("Edit \(\.$name)")
+        Summary("Change \(\.$music)'s name to \(\.$name)")
     }
     
-    func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
+    func perform() async throws -> some IntentResult {
         let musicModels:[MusicModel] = await fetchAllMusic()
         guard !musicModels.isEmpty else {
             print("Your album is empty.")
             throw MusicError.albumEmpty
         }
+        
+        let entity: MusicModel
+        
+        if let music {
+            entity = music
+        } else {
+            let targetEntity = try await $music.requestDisambiguation(among: self.fetchAllMusic(), dialog: "选择想要修改的音乐。")
+            entity = targetEntity
+            music = targetEntity
+        }
+        
         guard let name = name else {
             throw $name.needsValueError("Please enter the new music name.")
         }
-        print(musicModels)
-        return .result(dialog: "Which music would you like to edit?") {
-            MusicPickerView(musicModels: musicModels) { id in
-                updateMusic(id: id, name: name)
-            }
-        }
+        
+        self.updateMusic(id: entity.pid, name: name)
+        
+        return .result()
     }
     
     private func fetchAllMusic() async -> [MusicModel] {
@@ -51,9 +63,9 @@ struct EditMusicIntent: AppIntent {
             let addResult = await musicDataHandler().updateMusic(id: id, name: name)
             await MainActor.run {
                 if !addResult {
-                    print("An error occured when adding new music.")
+                    print("An error occured when updating music《\(name)》.")
                 } else {
-                    print("Successfully add new music.")
+                    print("Successfully update music《\(name)》.")
                 }
             }
         }

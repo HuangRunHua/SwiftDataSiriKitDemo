@@ -36,7 +36,7 @@ struct EditMusicIntent: AppIntent {
         if let music {
             entity = music
         } else {
-            let targetEntity = try await $music.requestDisambiguation(among: self.fetchAllMusic(), dialog: "选择想要修改的音乐。")
+            let targetEntity = try await $music.requestDisambiguation(among: self.fetchAllMusic(), dialog: "Please selected your target music.")
             entity = targetEntity
             music = targetEntity
         }
@@ -63,9 +63,9 @@ struct EditMusicIntent: AppIntent {
             let addResult = await musicDataHandler().updateMusic(id: id, name: name)
             await MainActor.run {
                 if !addResult {
-                    print("An error occured when updating music《\(name)》.")
+                    print("An error occured when updating music's name.")
                 } else {
-                    print("Successfully update music《\(name)》.")
+                    print("Successfully update music's name to《\(name)》.")
                 }
             }
         }

@@ -23,7 +23,7 @@ struct AddMusicIntent: AppIntent {
     
     func perform() async throws -> some IntentResult {
         guard let name = name else {
-            throw $name.needsValueError()
+            throw $name.needsValueError("你想添加什么歌曲？")
         }
         MusicDataBase.shared.addNewMusic(name: name)
         return .result()

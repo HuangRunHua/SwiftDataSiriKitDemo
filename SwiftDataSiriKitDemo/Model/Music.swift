@@ -72,7 +72,6 @@ class MusicDataBase {
         return allMusics
     }
     
-    /// 添加新的音乐到专辑中
     func updateMusic(id: PersistentIdentifier, name: String) {
         let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
         Task.detached {
@@ -87,7 +86,6 @@ class MusicDataBase {
         }
     }
     
-    /// 添加新的音乐到专辑中
     func addNewMusic(name: String) {
         let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
         Task.detached {

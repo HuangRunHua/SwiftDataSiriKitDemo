@@ -101,4 +101,18 @@ class MusicDataBase {
             }
         }
     }
+    
+    func deleteMusic(id: PersistentIdentifier) {
+        let musicDataHandler = MusicDataProvider.shared.musicDataHandlerCreator()
+        Task.detached {
+            let addResult = await musicDataHandler().deleteMusic(id)
+            await MainActor.run {
+                if !addResult {
+                    print("An error occured when deleting music.")
+                } else {
+                    print("Successfully delete music.")
+                }
+            }
+        }
+    }
 }

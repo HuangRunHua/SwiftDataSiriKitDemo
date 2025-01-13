@@ -46,6 +46,23 @@ actor MusicDataHandler {
         }
     }
     
+    func deleteMusic(
+        _ id: PersistentIdentifier
+    ) -> Bool {
+        guard let music: Music = self.modelContext.existingModel(for: id) else {
+            logger.error("Object Not Exist...")
+            return false
+        }
+        modelContext.delete(music)
+        do {
+            try modelContext.save()
+            return true
+        } catch {
+            logger.error("Deleting music failed: \(error)")
+            return false
+        }
+    }
+    
     func fetchAllMusics() -> [MusicModel] {
         let descriptor:FetchDescriptor<Music> = self.getAllMusicsDescriptor()
         do {

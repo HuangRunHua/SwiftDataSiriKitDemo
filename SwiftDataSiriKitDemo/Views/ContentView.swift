@@ -27,7 +27,7 @@ struct ContentView: View {
                     Text(music.name)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                deleteMusic(music: music)
+                                MusicDataBase.shared.deleteMusic(id: music.id)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -38,31 +38,13 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        addNewMusic()
+                        let name: String = "Music \(musics.count)"
+                        MusicDataBase.shared.addNewMusic(name: name)
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
-        }
-    }
-    
-    func addNewMusic() {
-        let newMusic: Music = Music(name: "Music \(musics.count + 1)")
-        modelContext.insert(newMusic)
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error occured when saving modelContext: \(error)")
-        }
-    }
-    
-    func deleteMusic(music: Music) {
-        modelContext.delete(music)
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error occured when deleting music: \(error)")
         }
     }
 }

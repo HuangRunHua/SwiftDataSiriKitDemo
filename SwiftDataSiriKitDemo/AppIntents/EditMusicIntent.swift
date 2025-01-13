@@ -30,10 +30,6 @@ struct EditMusicIntent: AppIntent {
             throw MusicError.albumEmpty
         }
         
-//        guard let music = music else {
-//            throw $music.needsValueError("Please selected your target music.")
-//        }
-        
         guard let music = music else {
             throw $music.needsDisambiguationError(
                 among: musicModels,

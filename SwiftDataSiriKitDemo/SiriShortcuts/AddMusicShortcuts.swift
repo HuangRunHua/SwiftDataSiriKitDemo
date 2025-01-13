@@ -12,7 +12,8 @@ struct AddMusicShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: AddMusicIntent(),
             phrases: [
-                "在\(.applicationName)中添加新音乐.",
+                "在\(.applicationName)中添加新音乐",
+                "添加新音乐到\(.applicationName)中",
             ],
             shortTitle: LocalizedStringResource(stringLiteral: "添加新音乐到专辑中"),
             systemImageName: "plus"

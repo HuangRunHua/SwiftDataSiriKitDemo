@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AppIntents
 
 struct ContentView: View {
     
@@ -16,15 +17,22 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List(musics) { music in
-                Text(music.name)
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            deleteMusic(music: music)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
+            List {
+                Section {
+                    SiriTipView(intent: EditMusicIntent())
+                        .siriTipViewStyle(.dark)
+                }
+                
+                ForEach(musics) { music in
+                    Text(music.name)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                deleteMusic(music: music)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
                         }
-                    }
+                }
             }
             .navigationTitle("Music")
             .toolbar {
